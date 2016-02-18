@@ -26,7 +26,7 @@ void zerror(const char *msg){
 static int logf = -1;
 static char lbuf[1024];
 
-void makelog(char *str, int size){
+void makelog(const char *str, int size){
     if (logf>=0){
         if (size == 0){
             size = strlen(str);
@@ -130,6 +130,7 @@ int check_header(const char *msg, int read, int *url_start, int *url_end){
         }
     }
     else if (strncmp(msg, "GET /", min(read,5)) != 0){
+        makelog(msg, read);
         return -1;
     }
     return 0;
