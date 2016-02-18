@@ -366,7 +366,7 @@ int main(int argc, char **argv){
     in_addr_t any = INADDR_ANY;
     if (!host)
         memcpy(&bind_addr.sin_addr, &any, sizeof(bind_addr.sin_addr));
-    logf = open("/home/vbox/final.log", O_CREAT | O_APPEND | O_WRONLY, 0644);
+    logf = open("/home/box/final.log", O_CREAT | O_APPEND | O_WRONLY, 0644);
     if (logf < 0)
         logf = open("/home/gtoly/final.log", O_CREAT | O_APPEND | O_WRONLY, 0644);
     snprintf( lbuf, sizeof(lbuf), "start -p %d -h %s -d %s", port, host, root );
