@@ -437,6 +437,7 @@ int main(int argc, char **argv){
         while(1){
             addrsize = sizeof(addr);
             if ((sock = accept4(master_socket, (struct sockaddr *)&addr, &addrsize, SOCK_CLOEXEC)) >= 0){
+                makelog("accept ....", 0);
                 int buffer[2];
                 buffer[0] = 0;
                 buffer[1] = sock;
