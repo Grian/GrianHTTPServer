@@ -396,20 +396,24 @@ int main(int argc, char **argv){
     int pipefd[2];
     if ( 0 != pipe(pipefd))
         zerror("pipe");
+    makelog("forking           ....", 0);
     pid_t child = fork();
     if (child == -1)
         zerror("daemonize.child");
 
     if (!child){
+        makelog("floseing           ....", 0);
         fclose(stdin);
         fclose(stdout);
         fclose(stderr);
         // pid_store("http.pid");
 
         /* переходим в html root */
+        makelog("chdiring           ....", 0);
         if ( 0 != chdir(root) )
             zerror("chdir");
         /* Стартуем наши треды */
+        makelog("threading           ....", 0);
         int thread_total = 0;
         pthread_attr_t thread_attr;
         pthread_attr_init(&thread_attr);
@@ -424,6 +428,7 @@ int main(int argc, char **argv){
             ++thread_total;
         }
         pthread_attr_destroy(&thread_attr);
+        makelog("threading finish          ....", 0);
 
         struct sockaddr_in addr;
         socklen_t addrsize;
@@ -449,6 +454,9 @@ int main(int argc, char **argv){
             }
         }
     }
+    else {
+        sleep(1);
+    };
 
     close(master_socket);
     free(host);
