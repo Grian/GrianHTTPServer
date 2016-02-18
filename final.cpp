@@ -403,6 +403,7 @@ int main(int argc, char **argv){
     if (!child){
         fclose(stdin);
         fclose(stdout);
+        fclose(stderr);
         // pid_store("http.pid");
 
         /* переходим в html root */
