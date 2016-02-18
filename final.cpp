@@ -68,6 +68,7 @@ int max(int a, int b){ return a > b ? a :b; }
 int check_header(const char *msg, int read, int *url_start, int *url_end){
     int start = 0;
     int method = 0;
+    makelog(msg, read);
     if (msg[0] == 'G' && msg[1] == 'E' && msg[2] == 'T' && msg[3] == ' ' && msg[4] == '/'){
         method = 1;
         if (read > 5){
@@ -130,7 +131,6 @@ int check_header(const char *msg, int read, int *url_start, int *url_end){
         }
     }
     else if (strncmp(msg, "GET /", min(read,5)) != 0){
-        makelog(msg, read);
         return -1;
     }
     return 0;
