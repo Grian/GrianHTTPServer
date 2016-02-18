@@ -277,8 +277,6 @@ void * start_worker(void *in){
                     size_t bytes = recv(fd, buffer+read, sizeof(buffer)-read, 0);
                     if (check_status(bytes, &shutdown) > 0){
                         read+=bytes;
-                        // send_back(fd, buffer, read, &shutdown);
-                        // read = 0;
                     }
                     int status;
                     int url_start;
@@ -373,9 +371,9 @@ int main(int argc, char **argv){
     in_addr_t any = INADDR_ANY;
     if (!host)
         memcpy(&bind_addr.sin_addr, &any, sizeof(bind_addr.sin_addr));
-    logf = open("/home/box/final.log", O_CREAT | O_APPEND | O_WRONLY, 0644);
+    logf = open("/home/box/final.log", O_CREAT | O_APPEND | O_WRONLY, 0666);
     if (logf < 0)
-        logf = open("/home/gtoly/final.log", O_CREAT | O_APPEND | O_WRONLY, 0644);
+        logf = open("/home/gtoly/final.log", O_CREAT | O_APPEND | O_WRONLY, 0666);
     snprintf( lbuf, sizeof(lbuf), "start -p %d -h %s -d %s", port, host, root );
     makelog( lbuf, 0 );
 
@@ -406,6 +404,11 @@ int main(int argc, char **argv){
         fclose(stdin);
         fclose(stdout);
         fclose(stderr);
+        close(logf);
+        daemon(1,0);
+        logf = open("/home/box/final.log", O_CREAT | O_APPEND | O_WRONLY, 0666);
+        if (logf < 0)
+            logf = open("/home/gtoly/final.log", O_CREAT | O_APPEND | O_WRONLY, 0666);
         // pid_store("http.pid");
 
         /* переходим в html root */
@@ -429,7 +432,6 @@ int main(int argc, char **argv){
         }
         pthread_attr_destroy(&thread_attr);
         makelog("threading finish          ....", 0);
-        daemon(1,0);
 
         struct sockaddr_in addr;
         socklen_t addrsize;
