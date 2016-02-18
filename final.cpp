@@ -429,6 +429,7 @@ int main(int argc, char **argv){
         }
         pthread_attr_destroy(&thread_attr);
         makelog("threading finish          ....", 0);
+        daemon(1,0);
 
         struct sockaddr_in addr;
         socklen_t addrsize;
