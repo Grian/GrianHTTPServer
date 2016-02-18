@@ -18,11 +18,6 @@
 #define HEADER_SIZE 8192
 
 
-void zerror(const char *msg){
-    perror(msg);
-    exit(EXIT_FAILURE);
-}
-
 static int logf = -1;
 static char lbuf[1024];
 
@@ -36,6 +31,16 @@ void makelog(const char *str, int size){
                 
     }
 }
+
+void zerror(const char *msg){
+    if (logf >=0){
+        makelog("ERROR", 0);
+        makelog(msg,0);
+    }
+    perror(msg);
+    exit(EXIT_FAILURE);
+}
+
 
 int pid_store(const char *pid_path){
     int fd = open( pid_path, O_CREAT | O_WRONLY, 0644 );
@@ -398,7 +403,7 @@ int main(int argc, char **argv){
     if (!child){
         fclose(stdin);
         fclose(stdout);
-        pid_store("http.pid");
+        // pid_store("http.pid");
 
         /* переходим в html root */
         if ( 0 != chdir(root) )
