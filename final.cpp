@@ -23,6 +23,20 @@ void zerror(const char *msg){
     exit(EXIT_FAILURE);
 }
 
+static int logf = -1;
+static char lbuf[1024];
+
+void makelog(char *str, int size){
+    if (logf>=0){
+        if (size == 0){
+            size = strlen(str);
+        }
+        write(logf, str, size);
+        write(logf, "\n", 1);
+                
+    }
+}
+
 int pid_store(const char *pid_path){
     int fd = open( pid_path, O_CREAT | O_WRONLY, 0644 );
     if (fd >= 0){
@@ -266,6 +280,7 @@ void * start_worker(void *in){
                         if (status > 0){
                             // print_debug(fd, buffer, url_start, url_end, shutdown);
                             const char *content_type;
+                            makelog(buffer, url_end+9);
                             convert_path(buffer + url_start, url_end - url_start, content_type);
                             ////fprintf(stderr, "openning %s\n", 1+buffer + url_start);
                             int filefd = open(buffer + url_start, O_RDONLY);
@@ -351,6 +366,11 @@ int main(int argc, char **argv){
     in_addr_t any = INADDR_ANY;
     if (!host)
         memcpy(&bind_addr.sin_addr, &any, sizeof(bind_addr.sin_addr));
+    logf = open("/home/vbox/final.log", O_CREAT | O_APPEND | O_WRONLY, 0644);
+    if (logf < 0)
+        logf = open("/home/gtoly/final.log", O_CREAT | O_APPEND | O_WRONLY, 0644);
+    snprintf( lbuf, sizeof(lbuf), "start -p %d -h %s -d %s", port, host, root );
+    makelog( lbuf, 0 );
 
     int master_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (master_socket < 0)
