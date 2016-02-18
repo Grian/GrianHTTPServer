@@ -427,6 +427,7 @@ int main(int argc, char **argv){
         struct sockaddr_in addr;
         socklen_t addrsize;
         int sock;
+        makelog("accepting           ....", 0);
         while(1){
             addrsize = sizeof(addr);
             if ((sock = accept4(master_socket, (struct sockaddr *)&addr, &addrsize, SOCK_CLOEXEC)) >= 0){
